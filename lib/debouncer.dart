@@ -10,10 +10,12 @@ class Debouncer extends StatefulWidget {
   final Duration timeout;
 
   Debouncer({
+    Key? key,
     required this.action,
     required this.child,
     Duration? timeout,
-  }) : timeout = timeout ?? Duration(milliseconds: 500);
+  })  : timeout = timeout ?? Duration(milliseconds: 500),
+        super(key: key);
 
   @override
   DebouncerState createState() => DebouncerState();

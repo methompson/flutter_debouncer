@@ -172,7 +172,7 @@ class _SliderExample2State extends State<_SliderExample2> {
   Widget build(BuildContext context) {
     return Debouncer(
       action: saveData,
-      child: (_context) => Column(
+      child: (newContext) => Column(
         children: [
           Text('Saved: $saved'),
           Text('Current Value: ${_currentSliderValue.toStringAsFixed(2)}'),
@@ -187,7 +187,7 @@ class _SliderExample2State extends State<_SliderExample2> {
                 _currentSliderValue = value;
               });
 
-              Debouncer.execute(_context);
+              Debouncer.execute(newContext);
             },
           ),
         ],
