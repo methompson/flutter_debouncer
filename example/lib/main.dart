@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:debouncer/debouncer.dart';
+import 'package:debouncer_widget/debouncer_widget.dart';
 
 void main() {
   runApp(const MyApp());

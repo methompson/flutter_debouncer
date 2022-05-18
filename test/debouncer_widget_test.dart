@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:debouncer/debouncer.dart';
+import 'package:debouncer_widget/debouncer_widget.dart';
 
 class RealClass {
   action() {}

@@ -1,4 +1,4 @@
-library debouncer;
+library debouncer_widget;
 
 import 'dart:async';
 

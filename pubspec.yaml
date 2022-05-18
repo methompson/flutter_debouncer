@@ -1,7 +1,8 @@
-name: debouncer
+name: debouncer_widget
 description: A new Flutter package project.
 version: 1.0.0
-homepage:
+homepage: https://methompson.com
+repository: https://github.com/methompson/flutter_debouncer
 
 environment:
   sdk: ">=2.17.0 <3.0.0"

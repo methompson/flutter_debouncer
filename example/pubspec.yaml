@@ -1,4 +1,4 @@
-name: debouncer_example
+name: debouncer_widget_example
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  debouncer:
+  debouncer_widget:
     path: ../
 
 
