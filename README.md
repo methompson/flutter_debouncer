@@ -11,29 +11,39 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# Debouncer
+
+Simple Flutter Debounce Widget
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Debouncer is an easy-to-use Widget that allows a user to make many changes to a form, but update only after the user stops making changes. This allows a form to automatically submit or update the state without a ton of costly request for every single change made.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+You can use Debouncer like any other widget. The Debouncer widget controls the actions that you want to take once the user is done interacting with the form. The default timeout is 500 milliseconds, but any Duration can be used.
 
 ```dart
-const like = 'sample';
+Debouncer(
+  action: () {
+    // Do something when the user is finished
+  },
+  builder: (newContext, _) => Column(
+    children: [
+      TextField(
+        decoration: InputDecoration(
+          label: Text("Text Input"),
+        ),
+        controller: TextEditingController(),
+        onChanged: (_) {
+          // Use the execute function to activate the
+          // action after the timeout
+          Debouncer.execute(newContext);
+        },
+      ),
+    ],
+  ),
+);
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.

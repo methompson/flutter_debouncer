@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'package:debouncer/debouncer.dart';
+
+class RealClass {
+  action() {}
+}
+
+class FakeClass extends Mock implements RealClass {}
 
 class TestWidget extends StatelessWidget {
   final Widget Function(BuildContext context) builder;
@@ -28,7 +35,7 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            home: Debouncer(action: action, child: (_) => child),
+            home: Debouncer(action: action, builder: (_, __) => child),
           ),
         );
 
@@ -40,10 +47,7 @@ void main() {
     testWidgets(
       'Finds and executes the Debouncer action if Debouncer is the button\'s parent',
       (WidgetTester tester) async {
-        bool run = false;
-        final action = () {
-          run = true;
-        };
+        final fake = FakeClass();
 
         final buttonKey = Key('buttonKey');
 
@@ -51,8 +55,8 @@ void main() {
           MaterialApp(
             home: Debouncer(
               timeout: Duration(milliseconds: 1),
-              action: action,
-              child: (context) => TextButton(
+              action: fake.action,
+              builder: (context, __) => TextButton(
                 key: buttonKey,
                 child: Container(),
                 onPressed: () {
@@ -63,7 +67,7 @@ void main() {
           ),
         );
 
-        expect(run, false);
+        verifyNever(fake.action());
 
         expect(find.byKey(buttonKey), findsOneWidget);
 
@@ -71,17 +75,14 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(run, true);
+        verify(fake.action()).called(1);
       },
     );
 
     testWidgets(
       'Finds and executes the Debouncer action if Debouncer is the parent further up the tree',
       (WidgetTester tester) async {
-        bool run = false;
-        final action = () {
-          run = true;
-        };
+        final fake = FakeClass();
 
         final buttonKey = Key('buttonKey');
 
@@ -89,8 +90,8 @@ void main() {
           MaterialApp(
             home: Debouncer(
               timeout: Duration(milliseconds: 1),
-              action: action,
-              child: (context) => Container(
+              action: fake.action,
+              builder: (context, __) => Container(
                 padding: EdgeInsets.all(10),
                 child: FractionallySizedBox(
                   child: Padding(
@@ -109,7 +110,7 @@ void main() {
           ),
         );
 
-        expect(run, false);
+        verifyNever(fake.action());
 
         expect(find.byKey(buttonKey), findsOneWidget);
 
@@ -117,7 +118,54 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(run, true);
+        verify(fake.action()).called(1);
+      },
+    );
+
+    testWidgets(
+      'Finds and executes the Debouncer by key',
+      (WidgetTester tester) async {
+        final fake = FakeClass();
+
+        final buttonKey = Key('buttonKey');
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Debouncer(
+              timeout: Duration(milliseconds: 1),
+              action: fake.action,
+              builder: (_, theKey) => Debouncer(
+                action: () {},
+                timeout: Duration(milliseconds: 1),
+                builder: (context, __) => Container(
+                  padding: EdgeInsets.all(10),
+                  child: FractionallySizedBox(
+                    child: Padding(
+                      padding: EdgeInsets.zero,
+                      child: TextButton(
+                        key: buttonKey,
+                        child: Container(),
+                        onPressed: () {
+                          Debouncer.execute(context, debouncerKey: theKey);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        verifyNever(fake.action());
+
+        expect(find.byKey(buttonKey), findsOneWidget);
+
+        await tester.tap(find.byKey(buttonKey));
+
+        await tester.pumpAndSettle();
+
+        verify(fake.action()).called(1);
       },
     );
 
