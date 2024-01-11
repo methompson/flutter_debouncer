@@ -45,15 +45,8 @@ class Debouncer extends StatefulWidget {
   @override
   DebouncerState createState() => DebouncerState();
 
-  /// Attempts to find and activate the action located in a parent widget to an
-  /// input. [context] should be the BuildContext of a child widget to a
-  /// Debouncer widget. [debouncerKey] is an optional key that can be used to
-  /// find a specific Debouncer widget if multiple parent Debouncers exist.
-  ///
-  /// If there is no Debouncer widget parent, an Exception is thrown. If there
-  /// are multiple Debouncer widget parents, but no debouncerKey is provided,
-  /// this function activates the first Debouncer it finds.
-  static execute(BuildContext context, {String? debouncerKey}) {
+  static DebouncerState? findDebouncerWidget(BuildContext context,
+      {String? debouncerKey}) {
     // Get a debouncer state for the context passed in.
     final el = _getDebouncerStateWidget(context);
     DebouncerState? elToExecute;
@@ -87,11 +80,41 @@ class Debouncer extends StatefulWidget {
       });
     }
 
+    return elToExecute;
+  }
+
+  /// Attempts to find and activate the action located in a parent widget to an
+  /// input. [context] should be the BuildContext of a child widget to a
+  /// Debouncer widget. [debouncerKey] is an optional key that can be used to
+  /// find a specific Debouncer widget if multiple parent Debouncers exist.
+  ///
+  /// If there is no Debouncer widget parent, an Exception is thrown. If there
+  /// are multiple Debouncer widget parents, but no debouncerKey is provided,
+  /// this function activates the first Debouncer it finds.
+  static execute(BuildContext context, {String? debouncerKey}) {
+    final elToExecute = Debouncer.findDebouncerWidget(
+      context,
+      debouncerKey: debouncerKey,
+    );
+
     if (elToExecute == null) {
       throw NoDebouncerFoundException('No Debouncer parent object present');
     }
 
-    elToExecute?.execute();
+    elToExecute.execute();
+  }
+
+  static cancel(BuildContext context, {String? debouncerKey}) {
+    final elToExecute = Debouncer.findDebouncerWidget(
+      context,
+      debouncerKey: debouncerKey,
+    );
+
+    if (elToExecute == null) {
+      throw NoDebouncerFoundException('No Debouncer parent object present');
+    }
+
+    elToExecute.cancel();
   }
 
   static DebouncerState? _getDebouncerStateWidget(BuildContext context) {
@@ -122,5 +145,9 @@ class DebouncerState extends State<Debouncer> {
     timer?.cancel();
 
     timer = Timer(widget.timeout, widget.action);
+  }
+
+  cancel() {
+    timer?.cancel();
   }
 }

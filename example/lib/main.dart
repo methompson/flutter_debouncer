@@ -43,25 +43,27 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
       ),
       body: Center(
-        child: FractionallySizedBox(
-          widthFactor: 0.9,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _ExampleContainer(
-                  title: 'Text Boxes Sharing a Debouncer',
-                  child: _TextExample()),
-              _ExampleContainer(
-                  title: 'Parent Widget', child: _SliderExample2()),
-              _ExampleContainer(
-                title: 'Multiple Sliders Sharing a Debouncer',
-                child: _SliderContainer(),
-              ),
-              _ExampleContainer(
-                title: 'Multiple Debouncers',
-                child: _MultiDebouncer(),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: FractionallySizedBox(
+            widthFactor: 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _ExampleContainer(
+                    title: 'Text Boxes Sharing a Debouncer',
+                    child: _TextExample()),
+                _ExampleContainer(
+                    title: 'Parent Widget', child: _SliderExample2()),
+                _ExampleContainer(
+                  title: 'Multiple Sliders Sharing a Debouncer',
+                  child: _SliderContainer(),
+                ),
+                _ExampleContainer(
+                  title: 'Multiple Debouncers',
+                  child: _MultiDebouncer(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -89,7 +91,7 @@ class _ExampleContainer extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
